@@ -14,6 +14,12 @@
         <label>Previous Scores</label>
         <input type="number" name="previousScores" id="previousScores" required>
         <br>
+        <label>Extracurricular Activities</label>
+        <select name="extracurricularActivities" id="extracurricularActivities">
+            <option value="1">Yes</option>
+            <option value="0">No</option>
+        </select>
+        <br>
         <label>Sleep Hours</label>
         <input type="number" name="sleepHours" id="sleepHours" required>
         <br>
@@ -25,7 +31,6 @@
     <div id="result"></div>
 
     <script>
-        
         const predictionForm = document.getElementById('predictionForm')
         predictionForm.addEventListener('submit', async(e) => {
             e.preventDefault();
@@ -38,6 +43,7 @@
             } else {
                 const formData = new FormData(predictionForm);
                 const data = Object.fromEntries(formData)
+                console.log(data)
                 try {
                     const response = await fetch('/predict', {
                         method: 'POST',
@@ -48,7 +54,10 @@
                     });
                     const result = await response.json();
                     if (result.success) {
-                        document.getElementById('result').innerHTML = `<h2>Result: ${result.prediction}</h2>`
+                        document.getElementById('result').innerHTML = `
+                            <h2>Result: ${result.prediction}</h2><br>
+                            <h2>Pass probability: ${result.pass_proba}%
+                        `
                     } else {
                         document.getElementById('result').innerHTML = `<p>Error</p>`
                     } 
